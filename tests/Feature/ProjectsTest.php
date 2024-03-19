@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Database\Factories\ProjectFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\Project;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProjectsTest extends TestCase
 {
@@ -15,7 +15,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_user_can_create_project()
     {
-        $attributes = (new ProjectFactory)->raw();
+        $attributes = Project::factory()->raw();
 
         $this->post('projects', $attributes)->assertRedirect('projects');
 
@@ -25,9 +25,19 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_view_a_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
+    }
+
+    /** @test */
     public function a_project_requires_a_title()
     {
-        $attributes = (new ProjectFactory)->raw(['title' => '']);
+        $attributes = Project::factory()->raw(['title' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors(['title']);
     }
@@ -35,7 +45,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_description()
     {
-        $attributes = (new ProjectFactory)->raw(['description' => '']);
+        $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors(['description']);
     }
