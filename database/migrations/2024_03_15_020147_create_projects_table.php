@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->foreignId('owner_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
