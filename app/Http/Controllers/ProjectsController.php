@@ -7,6 +7,11 @@ use App\Models\Project;
 class ProjectsController extends Controller
 {
 
+    public function create()
+    {
+        return view('projects.create');
+    }
+
     public function index()
     {
         $projects = auth()->user()->projects;
